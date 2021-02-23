@@ -1,23 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
+import "./App.css";
+
+function Talk({ song, title, assignees }) {
+  if (song) {
+    return <p className="song">Song {song}</p>;
+  }
+
+  return (
+    <div className="talk">
+      <p className="talk-title">{title}</p>
+      <div className="talk-assignees">
+        {assignees.map(a => (
+          <p key={a} className="talk-assignee">
+            {a}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 function App() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    if (!data) {
+      fetch("/tonight.json")
+        .then(r => r.ok && r.json())
+        .then(json => {
+          setData(json);
+        });
+    }
+  }, [data]);
+
+  if (!data) {
+    return <h1>Loading...</h1>;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>{data.date}</h1>
+      {data.talks.map(t => (
+        <Talk {...t} />
+      ))}
     </div>
   );
 }
