@@ -2,6 +2,13 @@
   text-align: center;
 }
 
+@media (min-width: 1025px) {
+  .App {
+    width: 600px;
+    margin: auto;
+  }
+}
+
 p {
   margin: 0;
 }
